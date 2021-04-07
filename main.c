@@ -33,6 +33,12 @@ typedef struct queueNode
     int que_priority; 
     struct queueNode* next;
 } readyQueueNode;
+typedef struct queue2Node
+{
+    void (*que_funcPointer)(void);
+    int ticks; 
+    struct queue2Node* next;
+} delayedQueueNode;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -48,7 +54,11 @@ typedef struct queueNode
 UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
-
+/*Queue Pointers*/
+readyQueueNode ** queueHead_ptr = NULL;
+readyQueueNode * queueHead = NULL;
+delayedQueueNode ** delayedqueueHead_ptr = NULL;
+delayedQueueNode * delayedqueueHead = NULL;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -56,16 +66,16 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART1_UART_Init(void);
 /* USER CODE BEGIN PFP */
-/*APIs defintion*/
+/*APIs declaration*/
 void Init(void);
-
 void QueTask(void (*funcPointer)(void),int priority);
 void dispatch (void);
-
-/*Queue defintion*/
-void queueInsertNewTask(void (*funcPointer)(void),int priority);
-
-/* Tasks definition */
+void ReRunMe(int tick);
+/*Queue functions declaration*/
+void readyQueueInsertNewTask(void (*funcPointer)(void),int priority);
+void delayQueueInsertNewTask(void (*funcPointer)(void),int ticks);
+void delayQueueTickDec (int ticks_counter);
+/* Tasks declaration */
 void printHi(void);
 void printHow(void);
 void printAre(void);
@@ -76,8 +86,6 @@ void printYou(void);
 /* USER CODE BEGIN 0 */
 /*Array of Pointers to tasks functions*/
 void (*tasks_ptr[4])(void)={&printHi,&printHow,&printAre,&printYou};
-readyQueueNode ** queueHead_ptr = NULL;
-readyQueueNode * queueHead;
 
 /* USER CODE END 0 */
 
@@ -111,9 +119,7 @@ int main(void)
   MX_GPIO_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-	
 	Init();
-	
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -124,8 +130,6 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 			dispatch();
-			HAL_Delay(1000);
-
   }
   /* USER CODE END 3 */
 }
@@ -240,10 +244,10 @@ static void MX_GPIO_Init(void)
 
 void Init(void)
 {
-		queueInsertNewTask(tasks_ptr[0],3);
-		queueInsertNewTask(tasks_ptr[1],2);
-		queueInsertNewTask(tasks_ptr[2],4);
-		queueInsertNewTask(tasks_ptr[3],1);
+		HAL_SYSTICK_Config(0x3D08CE);
+		QueTask(tasks_ptr[1],2);
+		QueTask(tasks_ptr[2],3);
+		QueTask(tasks_ptr[3],4);
 }
 
 void QueTask(void (*funcPointer)(void),int priority)
@@ -255,25 +259,24 @@ void QueTask(void (*funcPointer)(void),int priority)
 		priority = 0;
 	else if(priority >8)
 		priority = 8;
-	
 	/*Adding Task to the Queue*/
-	queueInsertNewTask(funcPointer,priority);	
+	readyQueueInsertNewTask(funcPointer,priority);	
 }
 
 void dispatch (void)
 {
 	void (*DoTask)(void);
-	if(queueHead_ptr!=NULL)
+	if(queueHead!=NULL)
 	{
 		readyQueueNode* temp = *queueHead_ptr;
-		(*queueHead_ptr) = (*queueHead_ptr)->next;
 		DoTask = temp -> que_funcPointer;
 		DoTask();
+		(*queueHead_ptr) = (*queueHead_ptr)->next;
 		free(temp);
 	}
 }
 
-void queueInsertNewTask(void (*funcPointer)(void),int priority)
+void readyQueueInsertNewTask(void (*funcPointer)(void),int priority)
 {
 	//First Node
 	if(queueHead == NULL)
@@ -312,25 +315,90 @@ void queueInsertNewTask(void (*funcPointer)(void),int priority)
 	}
 }
 
+void delayQueueInsertNewTask(void (*funcPointer)(void),int ticks)
+{
+	//First Node
+	if(delayedqueueHead == NULL)
+	{
+		/*Creating First Node*/
+		delayedqueueHead = (delayedQueueNode*)malloc(sizeof(delayedQueueNode));
+		delayedqueueHead-> que_funcPointer = funcPointer;
+		delayedqueueHead-> ticks = ticks;
+		delayedqueueHead-> next = NULL;
+		delayedqueueHead_ptr = &delayedqueueHead;
+	}
+	else
+	{
+		/*Creating Node*/
+		delayedQueueNode* temp = (delayedQueueNode*)malloc(sizeof(delayedQueueNode));
+		temp-> que_funcPointer = funcPointer;
+		temp-> ticks = ticks;
+		temp-> next = NULL;
+		
+		/*Adding to queue According to Priority*/
+		/*If new task has a higher priority than highest priority task in the queue switch them*/
+		if (delayedqueueHead->ticks > ticks)
+		{
+			temp-> next = *delayedqueueHead_ptr;
+			*delayedqueueHead_ptr = temp;
+		}
+		else
+		{
+			delayedQueueNode* queueStart = (*delayedqueueHead_ptr);
+			/*If new task has a lower priority travarse the queue and add the task according to its priority*/
+			while (queueStart->next != NULL && queueStart->next->ticks < ticks)
+					queueStart = queueStart->next;
+			temp->next = queueStart->next;
+			queueStart->next = temp;
+		}
+	}
+}
+void delayQueueTickDec (int ticks_counter)
+{
+	delayedQueueNode* temp = delayedqueueHead;
+	while(temp != NULL)
+	{
+		temp->ticks-=ticks_counter;
+		if(temp->ticks==0)
+		{
+			QueTask(temp->que_funcPointer,0);
+			delayedQueueNode* remove = *delayedqueueHead_ptr;
+			(*delayedqueueHead_ptr) = (*delayedqueueHead_ptr)->next;
+			free(remove);
+		}
+		temp=temp->next;
+	}
+	free(temp);
+	ticks_counter=0;
+}
+void ReRunMe(int tick)
+{
+	if(tick==0)
+		QueTask(queueHead->que_funcPointer,queueHead->que_priority);
+	else
+		delayQueueInsertNewTask(queueHead->que_funcPointer,tick);
+
+}
 /**@brief Tasks Initialization
 	*/
 void printHi(void)
 {
-	HAL_UART_Transmit(&huart1,(uint8_t *) "HI",2,HAL_MAX_DELAY);
+	HAL_UART_Transmit(&huart1,(uint8_t *) "HI",2,100);
 }
 void printHow (void)
 {
-	HAL_UART_Transmit(&huart1,(uint8_t *) "How",3,HAL_MAX_DELAY);
+	HAL_UART_Transmit(&huart1,(uint8_t *) "How",3,100);
+	ReRunMe(10);
 }
 void printAre (void)
 {
-	HAL_UART_Transmit(&huart1,(uint8_t *) "Are",3,HAL_MAX_DELAY);
+	HAL_UART_Transmit(&huart1,(uint8_t *) "Are",3,100);
+	ReRunMe(50);
 }
 void printYou (void)
 {
-	HAL_UART_Transmit(&huart1,(uint8_t *) "You",3,HAL_MAX_DELAY);
+	HAL_UART_Transmit(&huart1,(uint8_t *) "You",3,100);
 }
-
 /* USER CODE END 4 */
 
 /**
