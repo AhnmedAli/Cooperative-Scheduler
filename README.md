@@ -20,69 +20,7 @@ The objective of this short project is to develop a cooperative scheduler for em
   * Buzzer
 
 # APIs
-+ *QueTask(void (*funcPointer)(void) , int priority)** -- Insert Task into the ready queue from (ISRs , Other Tasks). 
-  * void (*funcPointer)(void): Pointer to the function (function name) that implements the task
-  * int priority: Task’s priority.
-- **Dispatch(void)** --  Remove the highest priority task from the queue and run it.
-+ **ReRunMe(int tick)** -- Insert task into the ready queue called by the task itself.
-  + int tick: After expiration of ticks (1 tick = 50ms) the task is added to the ready queue.
-
-# Schedular Building Process
-  + ### Tasks
-       + Is a function that returns no data and accepts no arguments.
-       - Example:
-       -      void printHi(void);
-              void (*tasks_ptr)(void)={&printHi,&printHow,&printAre,&printYou};
-              void printHi(void)
-              {
-                HAL_UART_Transmit(&huart1,(uint8_t *) "HI",2,100);
-              }
-          + This is a simple task that prints HI. 
-          + void printHi(void) This is task decleration.
-          + void (*tasks_ptr)(void)={&printHi,&printHow,&printAre,&printYou}; This is an array of function pointers, it carries the addresses of tasks to be executed.
-          + Below it the task defintion i.e what the task does.
-          + All tasks should follow the same initialization procedures. 
-  - ### Queues
-     Queues are implemnetned as a liked list of structs. Each struct is consisted of some variables and a pointer to the next struct.
-      - #### Ready Queue
-      + ##### Ready queue struct consists of function (task) pointer, queue priority and a pointer to the next node.
-        typedef struct queueNode
-        {
-        
-             void (*que_funcPointer)(void);
-             
-             int que_priority; 
-             
-             struct queueNode* next
-         } readyQueueNode;
-      - #### Delay Queue
-      + #####  Delay queue struct consists of function (task) pointer, number of ticks and a pointer to the next node.
-        typedef struct queue2Node
-        
-        {
-        
-            void (*que_funcPointer)(void);
-        
-            int ticks; 
-        
-            struct queue2Node* next;
-        
-        } delayedQueueNode;
-  - ### APIs 
-    - #### void Init(void)
-      This function creates and initializes all needed data structures.
-       void Init(void)
-       
-       {
-       
-       HAL_SYSTICK_Config(0x3D08CE);//79999*5
-       
-       QueTask(tasks_ptr[0],2);
-		   
-       QueTask(tasks_ptr[1],1);
-       
-       -}
-     + #### void QueTask(void (*funcPointer)(void),int priority)
++ #### void QueTask(void (*funcPointer)(void),int priority)
        This API checks if the priority of the current task is valid or not to fix it, 
        if it is less than 0 it will assign with priority 0
        , and if it is greater than 8 it will assign priority 8
@@ -136,6 +74,63 @@ The objective of this short project is to develop a cooperative scheduler for em
 	           }
 		       
            }
+
+# Schedular Building Process
+  + ### Tasks
+       + Is a function that returns no data and accepts no arguments.
+       - Example:
+       -      void printHi(void);
+              void (*tasks_ptr)(void)={&printHi,&printHow,&printAre,&printYou};
+              void printHi(void)
+              {
+                HAL_UART_Transmit(&huart1,(uint8_t *) "HI",2,100);
+              }
+          + This is a simple task that prints HI. 
+          + void printHi(void) This is task decleration.
+          + void (*tasks_ptr)(void)={&printHi,&printHow,&printAre,&printYou}; This is an array of function pointers, it carries the addresses of tasks to be executed.
+          + Below it the task defintion i.e what the task does.
+          + All tasks should follow the same initialization procedures. 
+  - ### Queues
+     Queues are implemnetned as a liked list of structs. Each struct is consisted of some variables and a pointer to the next struct.
+      - #### Ready Queue
+      + ##### Ready queue struct consists of function (task) pointer, queue priority and a pointer to the next node.
+        typedef struct queueNode
+        {
+        
+             void (*que_funcPointer)(void);
+             
+             int que_priority; 
+             
+             struct queueNode* next
+         } readyQueueNode;
+      - #### Delay Queue
+      + #####  Delay queue struct consists of function (task) pointer, number of ticks and a pointer to the next node.
+        typedef struct queue2Node
+        
+        {
+        
+            void (*que_funcPointer)(void);
+        
+            int ticks; 
+        
+            struct queue2Node* next;
+        
+        } delayedQueueNode;
+  - ### Schedular intialization function 
+    - #### void Init(void)
+      This function creates and initializes all needed data structures.
+       void Init(void)
+       
+       {
+       
+       HAL_SYSTICK_Config(0x3D08CE);//79999*5
+       
+       QueTask(tasks_ptr[0],2);
+		   
+       QueTask(tasks_ptr[1],1);
+       
+       -}
+     
 
 # Applications
   ## General Application "Testing"
