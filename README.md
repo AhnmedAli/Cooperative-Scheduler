@@ -68,9 +68,9 @@ The objective of this short project is to develop a cooperative scheduler for em
             struct queue2Node* next;
         
         } delayedQueueNode;
-  - ### Tasks for Queues 
+  - ### APIs 
     - #### void Init(void)
-     + ##### This function creates and initializes all needed data structures.
+      This function creates and initializes all needed data structures.
        void Init(void)
        
        {
@@ -82,6 +82,60 @@ The objective of this short project is to develop a cooperative scheduler for em
        QueTask(tasks_ptr[1],1);
        
        -}
+     + #### void QueTask(void (*funcPointer)(void),int priority)
+       This API checks if the priority of the current task is valid or not to fix it, 
+       if it is less than 0 it will assign with priority 0
+       , and if it is greater than 8 it will assign priority 8
+       , and then it will ad the task to the readyqueue
+       
+       void QueTask(void (*funcPointer)(void),int priority)
+       
+	
+		{
+	
+			priority>8 is assigned loweest priority "=8" 
+	
+			priority <0 assigned Highest priority "=0" */
+	
+			if(priority <0)
+	
+			priority = 0;
+	
+			else if(priority >8)
+	
+			priority = 8;
+	
+			readyQueueInsertNewTask(funcPointer,priority);	
+	
+		}
+     - #### void dispatch (void)
+       ThisAPI is used to remove the highest priority task from the queue and run it
+       
+           It checks first if there is a ready task in the queue to run it, and then point to the following task
+	   
+	   	void dispatch (void)
+		
+		    {
+		    
+		      void (*DoTask)(void);
+		      
+	              if(queueHead!=NULL)
+		      
+		       {
+		       
+		         readyQueueNode* temp = *queueHead_ptr;
+			 
+		         DoTask = temp -> que_funcPointer;
+			 
+		         DoTask();
+			 
+		         (*queueHead_ptr) = (*queueHead_ptr)->next;
+			 
+		         free(temp);
+			 
+	           }
+		       
+           }
 
 # Applications
   ## General Application "Testing"
