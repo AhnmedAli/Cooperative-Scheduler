@@ -50,5 +50,15 @@ The objective of this short project is to develop a cooperative scheduler for em
         Delay queue struct consists of function (task) pointer, number of ticks and a pointer to the next node.
   + ### 
 # Applications
+  ## General Application "Testing"
+   CubeMx General Settings
+    
+   Application
   ## Ambient Temperature Monitor
+   CubeMX Additional Settings
+    
+   Application
   ## Parking Sensor
+   CubeMx Additional Settings
+   
+   Application
