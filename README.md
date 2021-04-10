@@ -60,10 +60,7 @@ The objective of this short project is to develop a cooperative scheduler for em
        -       int ticks; 
        -       struct queue2Node* next;
        -    } delayedQueueNode;
-
-
-
-  + ### 
+  - ### Tasks for Queues 
 # Applications
   ## General Application "Testing"
    CubeMx General Settings
