@@ -44,23 +44,45 @@ The objective of this short project is to develop a cooperative scheduler for em
           + All tasks should follow the same initialization procedures. 
   - ### Queues
      Queues are implemnetned as a liked list of structs. Each struct is consisted of some variables and a pointer to the next struct.
-      + #### Ready Queue
+      - #### Ready Queue
       + ##### Ready queue struct consists of function (task) pointer, queue priority and a pointer to the next node.
-      -    typedef struct queueNode
-      -    {
-      -       void (*que_funcPointer)(void);
-      -       int que_priority; 
-      -       struct queueNode* next
-      -   } readyQueueNode;
+        typedef struct queueNode
+        {
+        
+             void (*que_funcPointer)(void);
+             
+             int que_priority; 
+             
+             struct queueNode* next
+         } readyQueueNode;
       - #### Delay Queue
       + #####  Delay queue struct consists of function (task) pointer, number of ticks and a pointer to the next node.
-       -    typedef struct queue2Node
-       -    {
-       -       void (*que_funcPointer)(void);
-       -       int ticks; 
-       -       struct queue2Node* next;
-       -    } delayedQueueNode;
+        typedef struct queue2Node
+        
+        {
+        
+            void (*que_funcPointer)(void);
+        
+            int ticks; 
+        
+            struct queue2Node* next;
+        
+        } delayedQueueNode;
   - ### Tasks for Queues 
+    - #### void Init(void)
+     + ##### This function creates and initializes all needed data structures.
+       void Init(void)
+       
+       {
+       
+       HAL_SYSTICK_Config(0x3D08CE);//79999*5
+       
+       QueTask(tasks_ptr[0],2);
+		   
+       QueTask(tasks_ptr[1],1);
+       
+       -}
+
 # Applications
   ## General Application "Testing"
    CubeMx General Settings
