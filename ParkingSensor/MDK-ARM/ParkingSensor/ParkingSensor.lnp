@@ -1,0 +1,27 @@
+--cpu=Cortex-M4.fp.sp --branchpatch=sdcomp-29491-629360
+"parkingsensor\startup_stm32l432xx.o"
+"parkingsensor\main.o"
+"parkingsensor\stm32l4xx_it.o"
+"parkingsensor\stm32l4xx_hal_msp.o"
+"parkingsensor\stm32l4xx_hal_tim.o"
+"parkingsensor\stm32l4xx_hal_tim_ex.o"
+"parkingsensor\stm32l4xx_hal.o"
+"parkingsensor\stm32l4xx_hal_i2c.o"
+"parkingsensor\stm32l4xx_hal_i2c_ex.o"
+"parkingsensor\stm32l4xx_hal_rcc.o"
+"parkingsensor\stm32l4xx_hal_rcc_ex.o"
+"parkingsensor\stm32l4xx_hal_flash.o"
+"parkingsensor\stm32l4xx_hal_flash_ex.o"
+"parkingsensor\stm32l4xx_hal_flash_ramfunc.o"
+"parkingsensor\stm32l4xx_hal_gpio.o"
+"parkingsensor\stm32l4xx_hal_dma.o"
+"parkingsensor\stm32l4xx_hal_dma_ex.o"
+"parkingsensor\stm32l4xx_hal_pwr.o"
+"parkingsensor\stm32l4xx_hal_pwr_ex.o"
+"parkingsensor\stm32l4xx_hal_cortex.o"
+"parkingsensor\stm32l4xx_hal_exti.o"
+"parkingsensor\system_stm32l4xx.o"
+--library_type=microlib --strict --scatter "ParkingSensor\ParkingSensor.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list "ParkingSensor.map" -o ParkingSensor\ParkingSensor.axf
