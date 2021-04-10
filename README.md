@@ -46,6 +46,17 @@ The objective of this short project is to develop a cooperative scheduler for em
      Queues are implemnetned as a liked list of structs. Each struct is consisted of some variables and a pointer to the next struct.
       + #### Ready Queue
         Ready queue struct consists of function (task) pointer, queue priority and a pointer to the next node.
+      *  typedef struct queueNode
+      *  {
+      *    void (*que_funcPointer)(void);
+      *    int que_priority; 
+      *    struct queueNode* next;
+      *  } readyQueueNode;
+
+
+
+
+
       - #### Delay Queue
         Delay queue struct consists of function (task) pointer, number of ticks and a pointer to the next node.
   + ### 
