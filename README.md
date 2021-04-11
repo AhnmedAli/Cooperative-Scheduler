@@ -66,16 +66,15 @@ The objective of this short project is to develop a cooperative scheduler for em
 		```
 		
   - #### Schedular intialization function
-   	This function creates and initializes all needed data structures, where it adjusts the systick tick to 50ms and then insert the tasks into the ready queue.
-	 	```
-	       void Init(void)
-	       {      
-		  HAL_SYSTICK_Config(0x3D08CE);//79999*50       
-		  QueTask(tasks_ptr[0],2);
-		  QueTask(tasks_ptr[1],1);
-	       }
-     		```
-
+ 	This function creates and initializes all needed data structures, where it adjusts the systick tick to 50ms and then insert the tasks into the ready queue.
+	```
+	void Init(void)
+	{      
+	  HAL_SYSTICK_Config(0x3D08CE);//79999*50       
+	  QueTask(tasks_ptr[0],2);
+	  QueTask(tasks_ptr[1],1);
+	}
+	
 # Applications
   ## General Application "Testing"
    CubeMx General Settings
@@ -90,8 +89,9 @@ The objective of this short project is to develop a cooperative scheduler for em
    CubeMX Additional Settings
    
    Application
+   
   ## Parking Sensor
-   + #### objective
+   + #### Objective
      Produce a sound that reflects how close is the car from the nearest object. A buzzer will be used
      to produce beeps and the duration between the beeps reflects how far is the object. The object distance will be
      determined by the ultrasound sensor.
