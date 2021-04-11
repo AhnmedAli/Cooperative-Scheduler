@@ -300,7 +300,7 @@ The objective of this short project is to develop a cooperative scheduler for em
    determined by the ultrasound sensor.
   
    ### CubeMx Additional Settings
-   Allow TIM1 -> Set Channel1 as input Capture Direct mode -> Set Prescaler to 80 “bring the timer clock to 1 MHz since the HCSR04 sends the signal in microseconds”.
+   Allow TIM1 -> Set Channel1 as input Capture Direct mode -> Set Prescaler to 80-1 “bring the timer clock to 1 MHz since the HCSR04 sends the signal in microseconds”.
    
    Allow TIM1 capture compare interrupt to catch the difference between timestamps representing rising edge and falling edge of ECHO pin output.
    
@@ -310,7 +310,8 @@ The objective of this short project is to develop a cooperative scheduler for em
    
    **NOTE** You will need to use a passive buzzer, Ultrasound Sensor and no need to enable USART in this application.
    
-   ![image](https://user-images.githubusercontent.com/74613419/114304033-5a5fc400-9ad1-11eb-87a0-1e138c423e3f.png)
+   ![image](https://user-images.githubusercontent.com/74613419/114319806-548ad280-9b13-11eb-97d5-330248dd57c1.png)
+
 
    ### Application
    Delay function in microseconds
@@ -359,14 +360,20 @@ The objective of this short project is to develop a cooperative scheduler for em
    ~~~
    void dist(void)
    {
+	if(distance/100 < 4)
+	{
+		for(int i=0;i<200+distance*10;i++)
+		{
+			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1,GPIO_PIN_SET);
+			delay(100);
+			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1,GPIO_PIN_RESET);
+			delay(100);
+		}
+	}
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0,GPIO_PIN_SET);
-	delay(10);
+		delay(10);
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0,GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1,GPIO_PIN_SET);
-	delay((400-distance)*2000);
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1,GPIO_PIN_RESET);
-	delay((400-distance)*2000);
-	__HAL_TIM_ENABLE_IT(&htim1, TIM_IT_CC1);
+ 	__HAL_TIM_ENABLE_IT(&htim1, TIM_IT_CC1);
 	ReRunMe(2);
    }
    ~~~
