@@ -1,16 +1,16 @@
 # Cooperative-Scheduler
 # Table of Contents 
-### [Introduction](#introduction)
+ [Introduction](#introduction)
 
-### [Requirements](#requirements)
+ [Requirements](#requirements)
 
-### [APIs](#apis)
+ [APIs](#apis)
 
-### [Schedular Building Process](#schedular-building-process) 
+ [Schedular Building Process](#schedular-building-process) 
 
-### [Applications](#applications)
+ [Applications](#applications)
 
-### [References](#references)
+ [References](#references)
 
 # Introduction 
 The objective of this short project is to develop a cooperative scheduler for embedded systems. The cooperative scheduler only executes tasks that occur at a time periodic interval. If two tasks are due to run at the same time, the task higher up in the task list runs first followed by the second and so on. Also we provide two main applications a **ambient temprature monitor** and a **parking sensor**.
