@@ -80,6 +80,7 @@ The objective of this short project is to develop a cooperative scheduler for em
      - ### Task Enqueue and Dequeue.
       * #### Enqueue
 		Tasks enter the ready and delay queue by the same way but ready queue compare priorities and delay queue compare number of ticks.
+		
           ~~~
                void delayQueueInsertNewTask(void (*funcPointer)(void),int ticks);
 		void readyQueueInsertNewTask(void (*funcPointer)(void),int priority)
@@ -141,28 +142,29 @@ The objective of this short project is to develop a cooperative scheduler for em
      + ### Ticks.
       	 delayQueueTickDec function decrement ticks in all nodes whenever systick interrupt occurs (handled by systick interrupt handler) and add tasks to ready queue if   	     ticks is equal to 0.
 	 
-	 ~~~
-		void delayQueueTickDec (int ticks_counter)
-		{
-			delayedQueueNode* temp = delayedqueueHead;
-			while(temp != NULL)
+		 ~~~
+			void delayQueueTickDec (int ticks_counter)
 			{
-				temp->ticks-=ticks_counter;
-				if(temp->ticks==0)
+				delayedQueueNode* temp = delayedqueueHead;
+				while(temp != NULL)
 				{
-					QueTask(temp->que_funcPointer,0);
-					delayedQueueNode* remove = *delayedqueueHead_ptr;
-					(*delayedqueueHead_ptr) = (*delayedqueueHead_ptr)->next;
-					free(remove);
+					temp->ticks-=ticks_counter;
+					if(temp->ticks==0)
+					{
+						QueTask(temp->que_funcPointer,0);
+						delayedQueueNode* remove = *delayedqueueHead_ptr;
+						(*delayedqueueHead_ptr) = (*delayedqueueHead_ptr)->next;
+						free(remove);
+					}
+					temp=temp->next;
 				}
-				temp=temp->next;
+				free(temp);
+				ticks_counter=0;
 			}
-			free(temp);
-			ticks_counter=0;
-		}
-	~~~
+		~~~
   - ### Schedular intialization function
  	This function creates and initializes all needed data structures, where it adjusts the systick tick to 50ms and then insert the tasks into the ready queue.
+	
 	```
 	void Init(void)
 	{      
