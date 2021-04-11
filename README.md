@@ -103,6 +103,94 @@ The objective of this short project is to develop a cooperative scheduler for em
 		temp-> que_priority = priority;
 		
 		temp-> next = NULL;
+     and then it checks on the order of the task priority in order to sort the tasks in the queue
+     If new task has a higher priority than highest priority task in the queue switch them
+     
+     if (queueHead->que_priority > priority)
+     
+		{
+		
+			temp->next = *queueHead_ptr;
+			
+			*queueHead_ptr = temp;
+			
+		}
+      else it checks If new task has a lower priority travarse the queue and add the task according to its priority
+      
+      else
+      
+		{
+		
+			readyQueueNode* queueStart = (*queueHead_ptr);
+						
+			while (queueStart->next != NULL && queueStart->next->que_priority < priority)
+			
+					queueStart = queueStart->next;
+					
+			temp->next = queueStart->next;
+			
+			queueStart->next = temp;
+			
+		}
+     - #### void delayQueueInsertNewTask(void (*funcPointer)(void),int ticks)
+        This API is used to insert tasks with delay in the dealyedqueue till it finishes its sleeping time and then insert in the readyqueue
+	
+	This API checks if the ready queue is empty, and if then it inserts this task on the top of the queue and if not it inserts it in the queue as any task.
+	
+	   if(delayedqueueHead == NULL)
+	   
+	      {
+	      
+		   delayedqueueHead = (delayedQueueNode*)malloc(sizeof(delayedQueueNode));
+		   
+		   delayedqueueHead-> que_funcPointer = funcPointer;
+		   
+		   delayedqueueHead-> ticks = ticks;
+		   
+		   delayedqueueHead-> next = NULL;
+		   
+		   delayedqueueHead_ptr = &delayedqueueHead;
+		   
+	      }
+	   else
+ 	      {
+		  delayedQueueNode* temp = (delayedQueueNode*)malloc(sizeof(delayedQueueNode));
+		  
+		  temp-> que_funcPointer = funcPointer;
+		  
+		  temp-> ticks = ticks;
+		  
+		  temp-> next = NULL;
+		  
+        and then it checks on the order of the task priority in order to sort the tasks in the queue
+        If new task has a higher priority than highest priority task in the queue switch them
+           if (delayedqueueHead->ticks > ticks)
+	   
+		  {
+		  
+			temp-> next = *delayedqueueHead_ptr;
+			
+			*delayedqueueHead_ptr = temp;
+			
+		  }
+		  
+       else it checks If new task has a lower priority travarse the queue and add the task according to its priority
+            else
+	    
+		{
+		
+			delayedQueueNode* queueStart = (*delayedqueueHead_ptr);
+			
+			while (queueStart->next != NULL && queueStart->next->ticks < ticks)
+			
+			queueStart = queueStart->next;
+			
+			temp->next = queueStart->next;
+			
+			queueStart->next = temp;
+			
+		}
+
 
 # Schedular Building Process
   + ### Tasks
