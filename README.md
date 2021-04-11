@@ -47,7 +47,7 @@ The objective of this short project is to develop a cooperative scheduler for em
 	
 		}
      - #### void dispatch (void)
-       ThisAPI is used to remove the highest priority task from the queue and run it
+       This API is used to remove the highest priority task from the queue and run it
        
            It checks first if there is a ready task in the queue to run it, and then point to the following task
 	   
@@ -74,6 +74,35 @@ The objective of this short project is to develop a cooperative scheduler for em
 	           }
 		       
            }
+     - #### void readyQueueInsertNewTask(void (*funcPointer)(void),int priority)
+     	 This API checks if the ready queue is empty, and if then it inserts this task on the top of the queue and if not it inserts it in the queue as any task.
+	 
+	   if(queueHead == NULL)
+	   
+	   {
+	   
+		queueHead = (readyQueueNode*)malloc(sizeof(readyQueueNode));
+		
+		queueHead-> que_funcPointer = funcPointer;
+		
+		queueHead-> que_priority = priority;
+		
+		queueHead-> next = NULL;
+		
+		queueHead_ptr = &queueHead;
+		
+	   }
+	   
+	else
+	
+	   {
+		readyQueueNode* temp = (readyQueueNode*)malloc(sizeof(readyQueueNode));
+		
+		temp-> que_funcPointer = funcPointer;
+		
+		temp-> que_priority = priority;
+		
+		temp-> next = NULL;
 
 # Schedular Building Process
   + ### Tasks
@@ -123,13 +152,13 @@ The objective of this short project is to develop a cooperative scheduler for em
        
        {
        
-       HAL_SYSTICK_Config(0x3D08CE);//79999*5
+       	  HAL_SYSTICK_Config(0x3D08CE);//79999*5
        
-       QueTask(tasks_ptr[0],2);
+          QueTask(tasks_ptr[0],2);
 		   
-       QueTask(tasks_ptr[1],1);
+          QueTask(tasks_ptr[1],1);
        
-       -}
+       }
      
 
 # Applications
