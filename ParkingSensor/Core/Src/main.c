@@ -203,7 +203,7 @@ static void MX_TIM1_Init(void)
 
   /* USER CODE END TIM1_Init 1 */
   htim1.Instance = TIM1;
-  htim1.Init.Prescaler = 80;
+  htim1.Init.Prescaler = 80-1;
   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim1.Init.Period = 65535;
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -439,15 +439,21 @@ void delay (uint16_t time)
 
 void dist(void)
 {
+	if(distance/100 < 4)
+	{
+		for(int i=0;i<200+distance*10;i++)
+		{
+			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1,GPIO_PIN_SET);
+			delay(100);
+			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1,GPIO_PIN_RESET);
+			delay(100);
+		}
+	}
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0,GPIO_PIN_SET);
-	delay(10);
+		delay(10);
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0,GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1,GPIO_PIN_SET);
-	delay((400-distance)*2000);
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1,GPIO_PIN_RESET);
-	delay((400-distance)*2000);
-	__HAL_TIM_ENABLE_IT(&htim1, TIM_IT_CC1);
-	ReRunMe(2);
+ __HAL_TIM_ENABLE_IT(&htim1, TIM_IT_CC1);
+ ReRunMe(2);
 }
 /* USER CODE END 4 */
 
