@@ -10,6 +10,8 @@
 
 ### [Applications](#applications)
 
+### [References](#references)
+
 # Introduction 
 The objective of this short project is to develop a cooperative scheduler for embedded systems. The cooperative scheduler only executes tasks that occur at a time periodic interval. If two tasks are due to run at the same time, the task higher up in the task list runs first followed by the second and so on. Also we provide two main applications a **ambient temprature monitor** and a **parking sensor**.
 
@@ -17,13 +19,13 @@ The objective of this short project is to develop a cooperative scheduler for em
   ### Softwares
   * STM32CubeMX.
   * Keil uVision5.
-  * Tera Term
+  * Tera Term.
   ### Hardware
   * STM32 Nucleo-32 development board with STM32L432KC MCU.
-  * USB to TTL bridge
-  * Buzzer
+  * USB to TTL bridge.
+  * Buzzer.
   * DS3221 -  I2C real-time clock (RTC) with an integrated temperature-compensated crystal oscillator (TCXO) and crystal.
-  * Ultrasound Sensor
+  * HC-sr04 Ultrasound Sensor.
 
 # APIs
 +  QueTask(void (*funcPointer)(void) , int priority)** -- Insert Task into the ready queue from (ISRs , Other Tasks). 
@@ -74,7 +76,91 @@ The objective of this short project is to develop a cooperative scheduler for em
 		    struct queue2Node* next;
 		} delayedQueueNode;
 		```
+	
+     - ### Task Enqueue and Dequeue.
+      * #### Enqueue
+		Tasks enter the ready and delay queue by the same way but ready queue compare priorities and delay queue compare number of ticks.
+          ~~~
+               void delayQueueInsertNewTask(void (*funcPointer)(void),int ticks);
+		void readyQueueInsertNewTask(void (*funcPointer)(void),int priority)
+		{
+		//First Node
+			if(queueHead == NULL)
+			{
+				/*Creating First Node*/
+				queueHead = (readyQueueNode*)malloc(sizeof(readyQueueNode));
+				queueHead-> que_funcPointer = funcPointer;
+				queueHead-> que_priority = priority;
+				queueHead-> next = NULL;
+				queueHead_ptr = &queueHead;
+			}
+			else
+			{
+				/*Creating Node*/
+				readyQueueNode* temp = (readyQueueNode*)malloc(sizeof(readyQueueNode));
+				temp-> que_funcPointer = funcPointer;
+				temp-> que_priority = priority;
+				temp-> next = NULL;
+
+				/*Adding to queue According to Priority*/
+				/*If new task has a higher priority than highest priority task in the queue switch them*/
+				if (queueHead->que_priority > priority)
+				{
+					temp->next = *queueHead_ptr;
+					*queueHead_ptr = temp;
+				}
+				else
+				{
+					readyQueueNode* queueStart = (*queueHead_ptr);
+					/*If new task has a lower priority travarse the queue and add the task according to its priority*/
+					while (queueStart->next != NULL && queueStart->next->que_priority < priority)
+							queueStart = queueStart->next;
+					temp->next = queueStart->next;
+					queueStart->next = temp;
+				}
+			}
+		}
+         ~~~
+	 
+	* #### Dequeue
+	   	Dispatch get the task out of ready queue and run it.
 		
+			void dispatch (void)
+			{
+				void (*DoTask)(void);
+				if(queueHead!=NULL)
+				{
+					readyQueueNode* temp = *queueHead_ptr;
+					DoTask = temp -> que_funcPointer;
+					DoTask();
+					(*queueHead_ptr) = (*queueHead_ptr)->next;
+					free(temp);
+				}
+			}
+         
+     + ### Ticks.
+      	 delayQueueTickDec function decrement ticks in all nodes whenever systick interrupt occurs (handled by systick interrupt handler) and add tasks to ready queue if   	     ticks is equal to 0.
+	 
+	 ~~~
+		void delayQueueTickDec (int ticks_counter)
+		{
+			delayedQueueNode* temp = delayedqueueHead;
+			while(temp != NULL)
+			{
+				temp->ticks-=ticks_counter;
+				if(temp->ticks==0)
+				{
+					QueTask(temp->que_funcPointer,0);
+					delayedQueueNode* remove = *delayedqueueHead_ptr;
+					(*delayedqueueHead_ptr) = (*delayedqueueHead_ptr)->next;
+					free(remove);
+				}
+				temp=temp->next;
+			}
+			free(temp);
+			ticks_counter=0;
+		}
+	~~~
   - ### Schedular intialization function
  	This function creates and initializes all needed data structures, where it adjusts the systick tick to 50ms and then insert the tasks into the ready queue.
 	```
@@ -264,7 +350,7 @@ The objective of this short project is to develop a cooperative scheduler for em
     }
    ~~~
    
-   Function raise the trig pin for 10 microseconds and the pull it low, so the sesnor starts the measurements.
+   Function raise the trig pin for 10 microseconds and the pull it low, so the sesnor starts the measurements and GPIOA pin1 is connected to the buzzer to generate buzz at      frequency relative to distance difference.
    ~~~
    void dist(void)
    {
@@ -279,4 +365,16 @@ The objective of this short project is to develop a cooperative scheduler for em
 	ReRunMe(2);
    }
    ~~~
+   Connections
    
+   ![parkingsesnor](https://user-images.githubusercontent.com/74613419/114305226-70708300-9ad7-11eb-88d4-c61e96d35a07.jpeg)
+
+   ### References
+   1-STM32L432KC Datasheet
+   https://www.st.com/resource/en/datasheet/stm32l432kc.pdf
+   
+   2-HC-sr04 ultrasonic sensor Datasheet
+   https://cdn.sparkfun.com/datasheets/Sensors/Proximity/HCSR04.pdf
+   
+   3-DS3231
+   https://datasheets.maximintegrated.com/en/ds/DS3231-DS3231S.pdf
