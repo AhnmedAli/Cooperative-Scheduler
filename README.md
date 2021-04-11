@@ -18,6 +18,7 @@ The objective of this short project is to develop a cooperative scheduler for em
   * STM32 Nucleo-32 development board with STM32L432KC MCU.
   * USB to TTL bridge
   * Buzzer
+  * DS3221 -  I2C real-time clock (RTC) with an integrated temperature-compensated crystal oscillator (TCXO) and crystal.
 
 # APIs
 +  QueTask(void (*funcPointer)(void) , int priority)** -- Insert Task into the ready queue from (ISRs , Other Tasks). 
@@ -77,25 +78,28 @@ The objective of this short project is to develop a cooperative scheduler for em
 	```
 # Applications
   ## General Application "Testing"
-   CubeMx General Settings
-    
-   Application
-  ## Ambient Temperature Monitor
-  + #### Objective
-    Read the ambient temperature using a sensor every 30 sec. Produce an alarm
-    (LED flashing) when the temperature exceeds a threshold. The threshold is set using a text command sent to the
-    embedded system from a PC over an asynchronous serial link
-    
-   CubeMX Additional Settings
+   ### Objective
    
-   Application
+   ### CubeMx General Settings
+    
+   ### Application
+   
+  ## Ambient Temperature Monitor
+   ### Objective
+   Read the ambient temperature using a sensor every 30 sec. Produce an alarm
+   (LED flashing) when the temperature exceeds a threshold. The threshold is set using a text command sent to the
+   embedded system from a PC over an asynchronous serial link
+    
+   ### CubeMX Additional Settings
+   
+   ### Application
    
   ## Parking Sensor
-   + #### Objective
-     Produce a sound that reflects how close is the car from the nearest object. A buzzer will be used
-     to produce beeps and the duration between the beeps reflects how far is the object. The object distance will be
-     determined by the ultrasound sensor.
+   ### Objective
+   Produce a sound that reflects how close is the car from the nearest object. A buzzer will be used
+   to produce beeps and the duration between the beeps reflects how far is the object. The object distance will be
+   determined by the ultrasound sensor.
   
-   CubeMx Additional Settings
+   ### CubeMx Additional Settings
    
-   Application
+   ### Application
