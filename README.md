@@ -380,7 +380,11 @@ The objective of this short project is to develop a cooperative scheduler for em
    **Connections**
    
    ![parkingsesnor](https://user-images.githubusercontent.com/74613419/114305226-70708300-9ad7-11eb-88d4-c61e96d35a07.jpeg)
-
+   
+   **Link to Video**
+   
+   Google Drive
+   
    ### References
    1-STM32L432KC Datasheet
    https://www.st.com/resource/en/datasheet/stm32l432kc.pdf
