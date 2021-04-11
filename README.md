@@ -291,10 +291,20 @@ The objective of this short project is to develop a cooperative scheduler for em
     
    Application
   ## Ambient Temperature Monitor
-   CubeMX Additional Settings
+  + #### Definition
+    Read the ambient temperature using a sensor every 30 sec. Produce an alarm
+    (LED flashing) when the temperature exceeds a threshold. The threshold is set using a text command sent to the
+    embedded system from a PC over an asynchronous serial link
     
+   CubeMX Additional Settings
+   
    Application
   ## Parking Sensor
+   + #### Definition
+     Produce a sound that reflects how close is the car from the nearest object. A buzzer will be used
+     to produce beeps and the duration between the beeps reflects how far is the object. The object distance will be
+     determined by the ultrasound sensor.
+  
    CubeMx Additional Settings
    
    Application
