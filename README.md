@@ -1,4 +1,5 @@
 # Cooperative-Scheduler
+The objective of this project is to develop a cooperative scheduler for embedded systems.
 # Table of Contents 
  [Introduction](#introduction)
 
