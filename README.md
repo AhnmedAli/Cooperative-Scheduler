@@ -20,9 +20,9 @@ The objective of this short project is to develop a cooperative scheduler for em
   * Buzzer
 
 # APIs
-+ *QueTask(void (*funcPointer)(void) , int priority)** -- Insert Task into the ready queue from (ISRs , Other Tasks). 
-  * void (*funcPointer)(void): Pointer to the function (function name) that implements the task
-  * int priority: Task’s priority.
++  QueTask(void (*funcPointer)(void) , int priority)** -- Insert Task into the ready queue from (ISRs , Other Tasks). 
+	  * void (*funcPointer)(void): Pointer to the function (function name) that implements the task
+	  * int priority: Task’s priority.
 - **Dispatch(void)** --  Remove the highest priority task from the queue and run it.
 + **ReRunMe(int tick)** -- Insert task into the ready queue called by the task itself.
   + int tick: After expiration of ticks (1 tick = 50ms) the task is added to the ready queue.
@@ -45,44 +45,36 @@ The objective of this short project is to develop a cooperative scheduler for em
   - ### Queues
      Queues are implemnetned as a liked list of structs. Each struct is consisted of some variables and a pointer to the next struct.
       - #### Ready Queue
-      + ##### Ready queue struct consists of function (task) pointer, queue priority and a pointer to the next node.
-        typedef struct queueNode
-        {
-        
-             void (*que_funcPointer)(void);
-             
-             int que_priority; 
-             
-             struct queueNode* next
-         } readyQueueNode;
-      - #### Delay Queue
-      + #####  Delay queue struct consists of function (task) pointer, number of ticks and a pointer to the next node.
-        typedef struct queue2Node
-        
-        {
-        
-            void (*que_funcPointer)(void);
-        
-            int ticks; 
-        
-            struct queue2Node* next;
-        
-        } delayedQueueNode;
-  - ### Schedular intialization function 
-    - #### void Init(void)
-      This function creates and initializes all needed data structures.
-       void Init(void)
-       
-       {
-       
-       	  HAL_SYSTICK_Config(0x3D08CE);//79999*5
-       
-          QueTask(tasks_ptr[0],2);
-		   
-          QueTask(tasks_ptr[1],1);
-       
-       }
-     
+		Ready queue struct consists of function (task) pointer, queue priority and a pointer to the next node.
+		```
+		typedef struct queueNode
+		{
+		     void (*que_funcPointer)(void);
+		     int que_priority; 
+		     struct queueNode* next
+		} readyQueueNode;
+		```		
+     - #### Delay Queue
+      	      Delay queue struct consists of function (task) pointer, number of ticks and a pointer to the next node.
+	      ```
+	      typedef struct queue2Node
+		{
+		    void (*que_funcPointer)(void);
+		    int ticks; 
+		    struct queue2Node* next;
+		} delayedQueueNode;
+		```
+		
+  - #### Schedular intialization function
+   	This function creates and initializes all needed data structures, where it adjusts the systick tick to 50ms and then insert the tasks into the ready queue.
+	 	```
+	       void Init(void)
+	       {      
+		  HAL_SYSTICK_Config(0x3D08CE);//79999*50       
+		  QueTask(tasks_ptr[0],2);
+		  QueTask(tasks_ptr[1],1);
+	       }
+     		```
 
 # Applications
   ## General Application "Testing"
@@ -90,7 +82,7 @@ The objective of this short project is to develop a cooperative scheduler for em
     
    Application
   ## Ambient Temperature Monitor
-  + #### Definition
+  + #### Objective
     Read the ambient temperature using a sensor every 30 sec. Produce an alarm
     (LED flashing) when the temperature exceeds a threshold. The threshold is set using a text command sent to the
     embedded system from a PC over an asynchronous serial link
@@ -99,7 +91,7 @@ The objective of this short project is to develop a cooperative scheduler for em
    
    Application
   ## Parking Sensor
-   + #### Definition
+   + #### objective
      Produce a sound that reflects how close is the car from the nearest object. A buzzer will be used
      to produce beeps and the duration between the beeps reflects how far is the object. The object distance will be
      determined by the ultrasound sensor.
