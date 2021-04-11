@@ -14,7 +14,7 @@ The objective of this project is to develop a cooperative scheduler for embedded
  [References](#references)
 
 # Introduction 
-The objective of this short project is to develop a cooperative scheduler for embedded systems. The cooperative scheduler only executes tasks that occur at a time periodic interval. If two tasks are due to run at the same time, the task higher up in the task list runs first followed by the second and so on. Also we provide two main applications a **ambient temprature monitor** and a **parking sensor**.
+The objective of this short project is to develop a cooperative scheduler for embedded systems. The cooperative scheduler only executes tasks that occur at a time periodic interval. If two tasks are due to run at the same time, the task higher up in the task list runs first followed by the second and so on. Also we provide two main applications an **ambient temprature monitor** and a **parking sensor**.
 
 # Requirements
   ### Softwares
