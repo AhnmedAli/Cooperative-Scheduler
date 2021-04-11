@@ -29,7 +29,7 @@ The objective of this short project is to develop a cooperative scheduler for em
 
 # Schedular Building Process
   + ### Tasks
-       + Is a function that returns no data and accepts no arguments.
+       A function that returns no data and accepts no arguments.
        - Example:
        -      void printHi(void);
               void (*tasks_ptr)(void)={&printHi,&printHow,&printAre,&printYou};
@@ -54,8 +54,8 @@ The objective of this short project is to develop a cooperative scheduler for em
 		     struct queueNode* next
 		} readyQueueNode;
 		```		
-     - #### Delay Queue
-      	      Delay queue struct consists of function (task) pointer, number of ticks and a pointer to the next node.
+     + #### Delay Queue
+     	Delay queue struct consists of function (task) pointer, number of ticks and a pointer to the next node.
 	      ```
 	      typedef struct queue2Node
 		{
@@ -65,7 +65,7 @@ The objective of this short project is to develop a cooperative scheduler for em
 		} delayedQueueNode;
 		```
 		
-  - #### Schedular intialization function
+  - ### Schedular intialization function
  	This function creates and initializes all needed data structures, where it adjusts the systick tick to 50ms and then insert the tasks into the ready queue.
 	```
 	void Init(void)
@@ -74,7 +74,7 @@ The objective of this short project is to develop a cooperative scheduler for em
 	  QueTask(tasks_ptr[0],2);
 	  QueTask(tasks_ptr[1],1);
 	}
-	
+	```
 # Applications
   ## General Application "Testing"
    CubeMx General Settings
