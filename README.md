@@ -190,7 +190,43 @@ The objective of this short project is to develop a cooperative scheduler for em
 			queueStart->next = temp;
 			
 		}
-
+     - #### void delayQueueTickDec (int ticks_counter)
+       This API used to generate tick every 50msec bu using systicktimer
+       
+            while(temp != NULL)
+	    
+		{
+		
+		   temp->ticks-=ticks_counter;
+		   
+		   if(temp->ticks==0)
+		   
+		      {
+		      
+			  QueTask(temp->que_funcPointer,0);
+			  
+			  delayedQueueNode* remove = *delayedqueueHead_ptr;
+			  
+			  (*delayedqueueHead_ptr) = (*delayedqueueHead_ptr)->next;
+			  
+			  free(remove);
+			  
+		       }
+		       
+		     temp=temp->next;
+		   
+	           }
+     - #### void ReRunMe(int tick)
+       This API checks if the sleeping time of the task = 0 and if it insert it in the ready queue and if not it keeps it un the dealyed queue
+       
+           if(tick==0)
+       
+		         QueTask(queueHead->que_funcPointer,queueHead->que_priority);
+		
+	   else
+	
+		         delayQueueInsertNewTask(queueHead->que_funcPointer,tick);
+		
 
 # Schedular Building Process
   + ### Tasks
