@@ -383,7 +383,7 @@ The objective of this short project is to develop a cooperative scheduler for em
    
    **Link to Video**
    
-   Google Drive
+   https://drive.google.com/file/d/1N_yzb0H2Y-cinvtL9qS0YEEz9JQJfF5r/view?usp=sharing
    
    ### References
    1-STM32L432KC Datasheet
