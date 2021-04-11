@@ -281,6 +281,8 @@ The objective of this short project is to develop a cooperative scheduler for em
    
    In case of passing the threshold temperature
    
+   ![ezgif com-gif-maker](https://user-images.githubusercontent.com/74613419/114307657-ecbb9400-9ae0-11eb-9298-d7830574c51a.gif)
+
    ![image](https://user-images.githubusercontent.com/74613419/114302912-93953580-9acb-11eb-8a07-915af8f94008.png)
    
    In ideal case
