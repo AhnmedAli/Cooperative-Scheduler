@@ -276,19 +276,19 @@ The objective of this short project is to develop a cooperative scheduler for em
    If the next reading is lower than the temperature threshold the led does not flash and the warning message does not show up.
 
    
-   Connections
+   **Connections**
    
    ![image](https://user-images.githubusercontent.com/74613419/114302877-66488780-9acb-11eb-8dec-ce5fd579cd3c.png)
    
-   Tera Term output
+   **Tera Term output**
    
-   In case of passing the threshold temperature
+   **In case of passing the threshold temperature**
    
    ![ezgif com-gif-maker](https://user-images.githubusercontent.com/74613419/114307657-ecbb9400-9ae0-11eb-9298-d7830574c51a.gif)
 
    ![image](https://user-images.githubusercontent.com/74613419/114302912-93953580-9acb-11eb-8a07-915af8f94008.png)
    
-   In ideal case
+   **In ideal case**
    
    ![image](https://user-images.githubusercontent.com/74613419/114302922-a1e35180-9acb-11eb-9c27-d571c8f67d08.png)
 	
@@ -370,7 +370,7 @@ The objective of this short project is to develop a cooperative scheduler for em
 	ReRunMe(2);
    }
    ~~~
-   Connections
+   **Connections**
    
    ![parkingsesnor](https://user-images.githubusercontent.com/74613419/114305226-70708300-9ad7-11eb-88d4-c61e96d35a07.jpeg)
 
